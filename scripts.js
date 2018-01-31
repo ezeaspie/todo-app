@@ -14,7 +14,6 @@ const todoFactory = (name, desc, due, priority, isComplete) => {
   return {name,desc,due,priority,toggleIsComplete,isComplete}
 };
 
-
 const inputValidationOnSubmit = (selector) => {
     $(selector + ' input').each(function() {
       if ($(this).val() == '') {
@@ -37,6 +36,7 @@ const clearInputOnSubmit = (selector) => {
     $(this).val('');
   });
 }
+
 //DOM Stuff
 
 const renderProjects = (array) => {
@@ -55,11 +55,11 @@ const renderProjects = (array) => {
         <input class="main" type="Date" id="todoDueDate${i}"></input>
         <label>Priority:</label>
           <input type="radio" id="p1" name="priority${i}" checked = "checked" value="1" />
-          <label for="p1">Low</label>
+          <label class="radio" for="p1">Low</label>
           <input type="radio" id="p2" name="priority${i}" value="2" />
-          <label for="p2">Medium</label>
+          <label class="radio" for="p2">Medium</label>
           <input type="radio" id="p3" name="priority${i}" value="3" />
-          <label for="p2">High</label>
+          <label class="radio" for="p2">High</label>
         <input id="submitTodo${i}" type="submit" value="Add Item"></input>
       </form>
       <ul id="todoList${i}" data-projectId=${i}>
@@ -85,7 +85,21 @@ const renderTodos = (array, projectId) => {
   document.querySelector("#todoList" + projectId).innerHTML = html;
 }
 
-const projectArray = [];
+//ON LOAD
+
+let projectArray = JSON.parse(localStorage.getItem("projectArray") || '[]');
+console.log(projectArray);
+
+if (projectArray[0] === undefined){
+  projectArray.push(projectFactory("My Project","List of To-Dos"));
+}
+
+renderProjects(projectArray);
+for (currentId = 0 ; currentId < projectArray.length ; currentId++){
+  renderTodos(projectArray[currentId].todoArray , currentId);
+}
+
+//LISTENERS
 
 document.querySelector("#addNewProject").addEventListener('submit', function(e) {
   e.preventDefault();
@@ -93,6 +107,7 @@ document.querySelector("#addNewProject").addEventListener('submit', function(e) 
     let projectName = document.querySelector("#projectName").value;
     let projectDesc = document.querySelector("#projectDesc").value;
     projectArray.push(projectFactory(projectName,projectDesc));
+    localStorage.setItem("projectArray", JSON.stringify(projectArray));
     renderProjects(projectArray);
     for (currentId = 0 ; currentId < projectArray.length ; currentId++){
       renderTodos(projectArray[currentId].todoArray , currentId);
@@ -113,8 +128,9 @@ $(document).on('submit', '.addNewTodo', function(e) {
     todoPriority = Number(todoPriority);
     console.log(todoPriority);
     let newtodoItem = todoFactory(todoName,todoDesc,todoDueDate,todoPriority, false);
-    projectArray[currentId].addTodo(newtodoItem);
+    projectArray[currentId].todoArray.push(newtodoItem);
     console.log(projectArray);
+    localStorage.setItem("projectArray", JSON.stringify(projectArray));
     renderTodos(projectArray[currentId].todoArray , currentId);
     clearInputOnSubmit('#addNewTodo' + currentId);
   }
@@ -125,6 +141,7 @@ $(document).on('click', '.toggle', function() {
   let task = $(this).attr("data-taskId");
   //This should work via a method created in the TodoFactory but for some reason it doesn't.
   projectArray[project].todoArray[task].isComplete = !projectArray[project].todoArray[task].isComplete;
+  localStorage.setItem("projectArray", JSON.stringify(projectArray));
   console.log(projectArray[project].todoArray[task].isComplete);
 });
 
@@ -132,7 +149,8 @@ $(document).on('click', '.remove', function() {
   let project = $(this).attr("data-projectId");
   let task = $(this).attr("data-taskId");
   //This should work via a method created in the TodoFactory but for some reason it doesn't.
-  projectArray[project].removeTodo(task);
+  projectArray[project].todoArray.splice(task,1);
+  localStorage.setItem("projectArray", JSON.stringify(projectArray));
   console.log(projectArray[project].todoArray);
   renderTodos(projectArray[project].todoArray , project);
 });

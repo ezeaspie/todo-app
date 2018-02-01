@@ -5,11 +5,18 @@
 </head>
 <body>
   <div id="content">
+    <div class="messageBox">
+      <h3 class= "message"></h3>
+      <button class="yes">Yes</button>
+      <button class="no">No</button>
+      <button class="confirm">Okay</button>
+    </div>
     <form id="addNewProject">
+      <h3>Add New Project</h3>
       <label>Project Name:</label>
-      <input type="text" class="main" id="projectName"></input>
+      <input class="main" id="projectName"></input>
       <label>Description:</label>
-      <input type="text" class="main" id="projectDesc"></input>
+      <input class="main" id="projectDesc"></input>
       <input id="submitProject" type="submit" value="Create Project"></input>
     </form>
     <ul id=projectList>

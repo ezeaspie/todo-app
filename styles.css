@@ -212,4 +212,23 @@ undefined .showProject {
   .project form input[type="submit"]{
     width:80%;
   }
+  .collapsed ul,
+  .collapsed form,
+  .collapsed .hideProject {
+    display:none;
+  }
+
+  .collapsed .showProject {
+    display:inline-block;
+  }
+
+  .built .hideProject,
+  undefined .hideProject {
+    display: inline-block;
+  }
+
+  .built .showProject,
+  undefined .showProject {
+    display:none;
+  }
 }

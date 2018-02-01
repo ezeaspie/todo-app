@@ -1,6 +1,8 @@
 # To-Do List App
 A small App used to organize "To-Dos" within "Projects".
 
+[Live Demo](https://ezeaspie.github.io/todo-app/)
+
 ## Features Overview
 
 -Create Named "Projects" that can each hold their own list of "To-Dos".
